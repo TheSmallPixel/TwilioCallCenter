@@ -6,6 +6,6 @@ modificando il file MSBuild. Per altre informazioni su questo argomento, vedere 
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\Work\GiupiterV3</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\loren\OneDrive\Documents\GitHub\TwilioCallCenter\Build</_PublishTargetUrl>
   </PropertyGroup>
 </Project>

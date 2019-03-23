@@ -16,14 +16,13 @@ namespace GiupiterWebApi.Controllers
     public class SmsController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Index(string code, string number)
+        public IActionResult Index(string text, string number)
         {
-            if (!String.IsNullOrWhiteSpace(code) && !String.IsNullOrWhiteSpace(number))
+            if (!String.IsNullOrWhiteSpace(text) && !String.IsNullOrWhiteSpace(number))
             {
                 if (IsPhoneNumber(number))
                 {
                     TwilioClient.Init(Auth.accountSid, Auth.authToken);
-                    var text = "Il codice di conferma è " + code;
                     var message = MessageResource.Create(
                         body: text,
                         from: new Twilio.Types.PhoneNumber("+393399957581"),

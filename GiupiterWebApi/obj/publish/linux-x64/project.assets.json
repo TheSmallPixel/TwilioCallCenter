@@ -17675,11 +17675,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\loren\\Desktop\\GiupiterWebApi\\GiupiterWebApi\\GiupiterWebApi.csproj",
+      "projectUniqueName": "C:\\Users\\loren\\OneDrive\\Documents\\GitHub\\TwilioCallCenter\\GiupiterWebApi\\GiupiterWebApi.csproj",
       "projectName": "GiupiterWebApi",
-      "projectPath": "C:\\Users\\loren\\Desktop\\GiupiterWebApi\\GiupiterWebApi\\GiupiterWebApi.csproj",
+      "projectPath": "C:\\Users\\loren\\OneDrive\\Documents\\GitHub\\TwilioCallCenter\\GiupiterWebApi\\GiupiterWebApi.csproj",
       "packagesPath": "C:\\Users\\loren\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\loren\\Desktop\\GiupiterWebApi\\GiupiterWebApi\\obj\\publish\\linux-x64\\",
+      "outputPath": "C:\\Users\\loren\\OneDrive\\Documents\\GitHub\\TwilioCallCenter\\GiupiterWebApi\\obj\\publish\\linux-x64\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -17693,6 +17693,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\loren\\OneDrive\\Documents\\Temp_Work\\ConfigLibrary\\ConfigLibrary\\bin\\Release\\netstandard2.0\\publish": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
