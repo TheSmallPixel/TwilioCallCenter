@@ -1,0 +1,14 @@
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\bin\x64\Debug\netcoreapp2.1\GiupiterWebApi.deps.json
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\bin\x64\Debug\netcoreapp2.1\GiupiterWebApi.runtimeconfig.json
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\bin\x64\Debug\netcoreapp2.1\GiupiterWebApi.runtimeconfig.dev.json
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\bin\x64\Debug\netcoreapp2.1\GiupiterWebApi.dll
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\bin\x64\Debug\netcoreapp2.1\GiupiterWebApi.pdb
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.csprojAssemblyReference.cache
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.csproj.CoreCompileInputs.cache
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.RazorAssemblyInfo.cache
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.RazorAssemblyInfo.cs
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.AssemblyInfoInputs.cache
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.AssemblyInfo.cs
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.RazorTargetAssemblyInfo.cache
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.dll
+C:\Users\loren\Desktop\GiupiterWebApi\GiupiterWebApi\obj\x64\Debug\netcoreapp2.1\GiupiterWebApi.pdb
