@@ -30,7 +30,6 @@ namespace GiupiterWebApi.Controllers
             var response = new VoiceResponse();
             string CallSid = "";
             parameters.TryGetValue("CallSid", out CallSid);
-            VoiceResponse resp = new VoiceResponse();
             if (!String.IsNullOrWhiteSpace(CallSid))
             {
                 Call call = null;
@@ -38,22 +37,22 @@ namespace GiupiterWebApi.Controllers
                 if (call != null)
                 {
 
-                    resp.Say("Giupiter.com la sta mettendo in contatto.", voice: "alice", language: "it-IT");
-                    resp.Dial(call.UserNumber, timeLimit: call.TimeLimit);
-                    resp.Hangup();
+                    response.Say("Giupiter.com la sta mettendo in contatto.", voice: "alice", language: "it-IT");
+                    response.Dial(call.UserNumber, timeLimit: call.TimeLimit);
+                    response.Hangup();
                     HttpTools.UpdateCall(call, "dtm");
                 }
                 else
                 {
-                    resp.Say("Mi spiace c'è stato un errore!", voice: "alice", language: "it-IT");
-                    resp.Hangup();
+                    response.Say("Mi spiace c'è stato un errore!", voice: "alice", language: "it-IT");
+                    response.Hangup();
                 }
             } else
             {
                 response.Say("Mi spiace c'è stato un errore cache!", voice: "alice", language: "it-IT");
                 response.Hangup();
             }
-            return Content(resp.ToString(), "application/xml");
+            return Content(response.ToString(), "application/xml");
         }
         private static IDictionary<string, string> ToDictionary(IFormCollection collection)
         {

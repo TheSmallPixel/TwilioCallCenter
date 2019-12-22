@@ -28,20 +28,16 @@ namespace GiupiterWebApi.Controllers
         [HttpPost]
         public IActionResult Index(int id_call, int id_user, int id_pro, int maxduration, string phone_number_user, string phone_number_pro)
         {
-            if (!String.IsNullOrWhiteSpace(phone_number_user) &&
-                !String.IsNullOrWhiteSpace(phone_number_pro) &&
-                IsPhoneNumber(phone_number_user) &&
-                IsPhoneNumber(phone_number_pro))
-            {
-
-                Call call = new Call() { IdCall = id_call, IdProf = id_pro, IdUser = id_user, TimeLimit = maxduration * 60, ProNumber = "+39" + phone_number_pro, UserNumber = "+39" + phone_number_user };
 
 
-                var Twilio = _notificationService.MakePhoneCallAsync(call);
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
-                memoryCache.Set(Twilio.Sid, call, cacheEntryOptions);
-                return Ok();
-            }
+            Call call = new Call() { IdCall = id_call, IdProf = id_pro, IdUser = id_user, TimeLimit = maxduration * 60, ProNumber = phone_number_pro, UserNumber =  phone_number_user };
+
+
+            var Twilio = _notificationService.MakePhoneCallAsync(call);
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+            memoryCache.Set(Twilio.Sid, call, cacheEntryOptions);
+            return Ok();
+
 
             return BadRequest("Wrong data");
         }

@@ -40,3 +40,17 @@ C:\Users\loren\OneDrive\Documents\GitHub\TwilioCallCenter\GiupiterWebApi\obj\Rel
 C:\Users\loren\OneDrive\Documents\GitHub\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.RazorTargetAssemblyInfo.cache
 C:\Users\loren\OneDrive\Documents\GitHub\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.dll
 C:\Users\loren\OneDrive\Documents\GitHub\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.pdb
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\bin\Release\netcoreapp2.1\GiupiterWebApi.deps.json
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\bin\Release\netcoreapp2.1\GiupiterWebApi.runtimeconfig.json
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\bin\Release\netcoreapp2.1\GiupiterWebApi.runtimeconfig.dev.json
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\bin\Release\netcoreapp2.1\GiupiterWebApi.dll
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\bin\Release\netcoreapp2.1\GiupiterWebApi.pdb
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.csprojAssemblyReference.cache
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.csproj.CoreCompileInputs.cache
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.RazorAssemblyInfo.cache
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.RazorAssemblyInfo.cs
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.AssemblyInfoInputs.cache
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.AssemblyInfo.cs
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.RazorTargetAssemblyInfo.cache
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.dll
+D:\Work\EW-Bot\Editor\TwilioCallCenter\GiupiterWebApi\obj\Release\netcoreapp2.1\GiupiterWebApi.pdb
