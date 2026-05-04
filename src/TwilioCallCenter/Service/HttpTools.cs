@@ -1,4 +1,4 @@
-﻿using GiupiterWebApi.Data;
+using TwilioCallCenter.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace GiupiterWebApi.Service
+namespace TwilioCallCenter.Service
 {
     public class HttpTools
     {

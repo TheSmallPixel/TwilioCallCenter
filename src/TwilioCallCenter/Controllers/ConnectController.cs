@@ -1,5 +1,6 @@
-ï»¿using GiupiterWebApi.Data;
-using GiupiterWebApi.Filters;
+using TwilioCallCenter.Data;
+using TwilioCallCenter.Filters;
+using TwilioCallCenter.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,16 +11,15 @@ using System.Net.Http.Headers;
 using Twilio.AspNet.Common;
 using Twilio.AspNet.Core;
 using Twilio.TwiML;
-using Twilio.TwiML.Voice;
 
-namespace GiupiterWebApi.Controllers
+namespace TwilioCallCenter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DtmController : ControllerBase
+    public class ConnectController : ControllerBase
     {
         private readonly IMemoryCache memoryCache;
-        public DtmController(IMemoryCache memoryCache)
+        public ConnectController(IMemoryCache memoryCache)
         {
             this.memoryCache = memoryCache;
         }
@@ -30,28 +30,26 @@ namespace GiupiterWebApi.Controllers
             var response = new VoiceResponse();
             string CallSid = "";
             parameters.TryGetValue("CallSid", out CallSid);
-
-            if (!String.IsNullOrWhiteSpace( CallSid))
+            if (!String.IsNullOrWhiteSpace(CallSid))
             {
                 Call call = null;
                 memoryCache.TryGetValue(CallSid, out call);
-                // bool isExist = memoryCache.TryGetValue(AccountSid, out call);
                 if (call != null)
                 {
-                    var gather = new Gather(action: new Uri(Auth.UrlPath + "/api/connect/"));
-                    gather.Say("Spinga un numero per accettare la chiamata da GIupiter.com", voice: "alice", language: "it-IT");
-                    response.Append(gather);
-                    response.Say("Grazie Arrivederci!", voice: "alice", language: "it-IT");
+
+                    response.Say("Giupiter.com la sta mettendo in contatto.", voice: "alice", language: "it-IT");
+                    response.Dial(call.UserNumber, timeLimit: call.TimeLimit);
                     response.Hangup();
+                    HttpTools.UpdateCall(call, "dtm");
                 }
                 else
                 {
-                    response.Say("Mi spiace c'Ã¨ stato un errore!", voice: "alice", language: "it-IT");
+                    response.Say("Mi spiace c'è stato un errore!", voice: "alice", language: "it-IT");
                     response.Hangup();
                 }
             } else
             {
-                response.Say("Mi spiace c'Ã¨ stato un errore cache!", voice: "alice", language: "it-IT");
+                response.Say("Mi spiace c'è stato un errore cache!", voice: "alice", language: "it-IT");
                 response.Hangup();
             }
             return Content(response.ToString(), "application/xml");

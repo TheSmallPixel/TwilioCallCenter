@@ -15,13 +15,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "GiupiterWebApi": {
+    "TwilioCallCenter": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:59348/"
+      "applicationUrl": "http://localhost:5000/"
     }
   }
 }

@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GiupiterWebApi.Controllers;
-using GiupiterWebApi.Service;
+using TwilioCallCenter.Controllers;
+using TwilioCallCenter.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Twilio.Clients;
 
-namespace GiupiterWebApi
+namespace TwilioCallCenter
 {
     public class Startup
     {

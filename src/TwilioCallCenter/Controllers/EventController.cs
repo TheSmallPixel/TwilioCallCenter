@@ -1,6 +1,6 @@
-﻿using GiupiterWebApi.Data;
-using GiupiterWebApi.Filters;
-using GiupiterWebApi.Service;
+using TwilioCallCenter.Data;
+using TwilioCallCenter.Filters;
+using TwilioCallCenter.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,7 +12,7 @@ using Twilio.AspNet.Common;
 using Twilio.AspNet.Core;
 using Twilio.TwiML;
 using Twilio.TwiML.Voice;
-namespace GiupiterWebApi.Controllers
+namespace TwilioCallCenter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

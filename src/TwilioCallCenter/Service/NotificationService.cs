@@ -1,11 +1,11 @@
-﻿using GiupiterWebApi.Data;
+using TwilioCallCenter.Data;
 using System;
 using System.Collections.Generic;
 using Twilio.Clients;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace GiupiterWebApi.Service
+namespace TwilioCallCenter.Service
 {
     public class NotificationService
     {

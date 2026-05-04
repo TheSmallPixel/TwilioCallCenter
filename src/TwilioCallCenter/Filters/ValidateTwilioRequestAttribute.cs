@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GiupiterWebApi.Data;
+using TwilioCallCenter.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Twilio.Security;
 
-namespace GiupiterWebApi.Filters
+namespace TwilioCallCenter.Filters
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class ValidateTwilioRequestAttribute : ActionFilterAttribute

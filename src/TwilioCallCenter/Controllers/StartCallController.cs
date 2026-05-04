@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GiupiterWebApi.Data;
-using GiupiterWebApi.Service;
+using TwilioCallCenter.Data;
+using TwilioCallCenter.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Twilio.Clients;
@@ -12,7 +12,7 @@ using Twilio.Rest.Api.V2010.Account;
 using Twilio.TwiML;
 using Twilio.Types;
 
-namespace GiupiterWebApi.Controllers
+namespace TwilioCallCenter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
