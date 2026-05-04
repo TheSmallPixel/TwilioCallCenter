@@ -1,32 +1,35 @@
-using TwilioCallCenter.Data;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 using Twilio.Clients;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using TwilioCallCenter.Configuration;
+using TwilioCallCenter.Data;
 
-namespace TwilioCallCenter.Service
+namespace TwilioCallCenter.Service;
+
+public class NotificationService : INotificationService
 {
-    public class NotificationService
+    private readonly TwilioRestClient _client;
+    private readonly TwilioOptions _twilio;
+    private readonly CallCenterOptions _callCenter;
+
+    public NotificationService(IOptions<TwilioOptions> twilio, IOptions<CallCenterOptions> callCenter)
     {
-        private readonly TwilioRestClient _client;
+        _twilio = twilio.Value;
+        _callCenter = callCenter.Value;
+        _client = new TwilioRestClient(_twilio.AccountSid, _twilio.AuthToken);
+    }
 
-        public NotificationService()
-        {
-            _client = new TwilioRestClient(Auth.accountSid, Auth.authToken);
-        }
-
-        public CallResource MakePhoneCallAsync(Call call)
-        {
-            return CallResource.Create(
-            statusCallback: new Uri(Auth.UrlPath+"/api/event/"),
-            statusCallbackEvent: new List<string>(new string[] { "initiated", "ringing", "answered", "completed" }),
+    public CallResource Place(Call call)
+    {
+        var baseUrl = _callCenter.PublicBaseUrl.TrimEnd('/');
+        return CallResource.Create(
+            statusCallback: new Uri($"{baseUrl}/api/event/"),
+            statusCallbackEvent: new List<string> { "initiated", "ringing", "answered", "completed" },
             statusCallbackMethod: Twilio.Http.HttpMethod.Post,
-
-            to: new PhoneNumber(call.ProNumber),
-            from: new PhoneNumber(Auth.Number),
-            url: new Uri(Auth.UrlPath+"/api/dtm/"),
+            to: new PhoneNumber(call.CalleeNumber),
+            from: new PhoneNumber(_twilio.FromNumber),
+            url: new Uri($"{baseUrl}/api/dtm/"),
             client: _client);
-        }
     }
 }

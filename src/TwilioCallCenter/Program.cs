@@ -1,24 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.HttpOverrides;
+using TwilioCallCenter.Configuration;
+using TwilioCallCenter.Service;
 
-namespace TwilioCallCenter
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<TwilioOptions>(builder.Configuration.GetSection("Twilio"));
+builder.Services.Configure<CallCenterOptions>(builder.Configuration.GetSection("CallCenter"));
+
+builder.Services.AddMemoryCache();
+builder.Services.AddControllers();
+builder.Services.AddHttpClient<IStatusWebhookClient, StatusWebhookClient>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+
+var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).UseKestrel().Build().Run();
-        }
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-    }
-}
+app.MapControllers();
+
+app.Run();
+
+public partial class Program { }

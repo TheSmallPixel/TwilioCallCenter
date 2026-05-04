@@ -1,49 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using TwilioCallCenter.Data;
-using TwilioCallCenter.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Twilio.Clients;
-using Twilio.Rest.Api.V2010.Account;
-using Twilio.TwiML;
-using Twilio.Types;
+using TwilioCallCenter.Common;
+using TwilioCallCenter.Data;
+using TwilioCallCenter.Models;
+using TwilioCallCenter.Service;
 
-namespace TwilioCallCenter.Controllers
+namespace TwilioCallCenter.Controllers;
+
+[ApiController]
+[Route("api/calls")]
+public class StartCallController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StartCallController : ControllerBase
+    private readonly INotificationService _notify;
+    private readonly IMemoryCache _cache;
+
+    public StartCallController(INotificationService notify, IMemoryCache cache)
     {
-        private readonly NotificationService _notificationService;
-        private readonly IMemoryCache memoryCache;
-        public StartCallController(IMemoryCache memoryCache)
+        _notify = notify;
+        _cache = cache;
+    }
+
+    [HttpPost("start")]
+    public IActionResult Start([FromBody] StartCallRequest? request)
+    {
+        if (request is null) return BadRequest("body required");
+        if (string.IsNullOrWhiteSpace(request.CorrelationId)) return BadRequest("correlationId required");
+        if (!PhoneNumberValidator.IsValid(request.CallerNumber)) return BadRequest("invalid callerNumber (E.164 expected)");
+        if (!PhoneNumberValidator.IsValid(request.CalleeNumber)) return BadRequest("invalid calleeNumber (E.164 expected)");
+        if (request.MaxDurationSeconds <= 0) return BadRequest("maxDurationSeconds must be positive");
+
+        var call = new Call
         {
-            this._notificationService = new NotificationService();
-            this.memoryCache = memoryCache;
-        }
-        [HttpPost]
-        public IActionResult Index(int id_call, int id_user, int id_pro, int maxduration, string phone_number_user, string phone_number_pro)
-        {
+            CorrelationId = request.CorrelationId,
+            CallerNumber = request.CallerNumber,
+            CalleeNumber = request.CalleeNumber,
+            MaxDurationSeconds = request.MaxDurationSeconds
+        };
 
+        var twilioCall = _notify.Place(call);
+        _cache.Set(twilioCall.Sid, call, TimeSpan.FromHours(24));
 
-            Call call = new Call() { IdCall = id_call, IdProf = id_pro, IdUser = id_user, TimeLimit = maxduration * 60, ProNumber = phone_number_pro, UserNumber =  phone_number_user };
-
-
-            var Twilio = _notificationService.MakePhoneCallAsync(call);
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
-            memoryCache.Set(Twilio.Sid, call, cacheEntryOptions);
-            return Ok();
-
-
-            return BadRequest("Wrong data");
-        }
-        public static bool IsPhoneNumber(string number)
-        {
-            return Regex.Match(number, @"^[0-9]{10}$").Success;
-        }
+        return Accepted(new { callSid = twilioCall.Sid, correlationId = call.CorrelationId });
     }
 }

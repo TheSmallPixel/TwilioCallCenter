@@ -1,55 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using TwilioCallCenter.Data;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Twilio.Security;
+using TwilioCallCenter.Common;
+using TwilioCallCenter.Configuration;
 
-namespace TwilioCallCenter.Filters
+namespace TwilioCallCenter.Filters;
+
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+public class ValidateTwilioRequestAttribute : Attribute, IAsyncActionFilter
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public class ValidateTwilioRequestAttribute : ActionFilterAttribute
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        private readonly RequestValidator _requestValidator;
+        var options = context.HttpContext.RequestServices
+            .GetRequiredService<IOptions<TwilioOptions>>().Value;
 
-        private static IConfigurationRoot Configuration =>
-            new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory()).Build();
-
-        public ValidateTwilioRequestAttribute()
+        if (string.IsNullOrEmpty(options.AuthToken))
         {
-            var authToken = Auth.authToken;
-            _requestValidator = new RequestValidator(authToken);
+            context.Result = new StatusCodeResult(500);
+            return;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext actionContext)
-        {
-            var context = actionContext.HttpContext;
+        var request = context.HttpContext.Request;
+        var url = $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
+        var signature = request.Headers["X-Twilio-Signature"].ToString();
 
-            base.OnActionExecuting(actionContext);
+        IDictionary<string, string> parameters = new Dictionary<string, string>();
+        if (request.HasFormContentType)
+        {
+            var form = await request.ReadFormAsync();
+            parameters = form.ToStringDictionary();
         }
 
-        private bool IsValidRequest(HttpRequest request)
+        var validator = new RequestValidator(options.AuthToken);
+        if (!validator.Validate(url, parameters, signature))
         {
-            var requestUrl = RequestRawUrl(request);
-            var parameters = ToDictionary(request.Form);
-            var signature = request.Headers["X-Twilio-Signature"];
-            return  _requestValidator.Validate(requestUrl, parameters, signature);
+            context.Result = new StatusCodeResult(403);
+            return;
         }
 
-        private static string RequestRawUrl(HttpRequest request)
-        {
-            return $"{request.Scheme}://{request.Host}{request.Path}{request.QueryString}";
-        }
-
-        private static IDictionary<string, string> ToDictionary(IFormCollection collection)
-        {
-            return collection.Keys
-                .Select(key => new { Key = key, Value = collection[key] })
-                .ToDictionary(p => p.Key, p => p.Value.ToString());
-        }
+        await next();
     }
 }

@@ -1,25 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace TwilioCallCenter.Data;
 
-namespace TwilioCallCenter.Data
+public class Call
 {
-    public class Call
-    {
-        public string Token { get; set; }
-        public int IdUser { get; set; }
-        public int IdProf { get; set; }
-        public int IdCall { get; set; }
-        public int TimeLimit { get; set; }
-        public bool hasResponsed { get; set; } = false;
-        public string UserNumber { get; set; }
-        public string ProNumber { get; set; }
-        public string UserSid { get; set; }
-        public string ProSid { get; set; }
-        public Call()
-        {
-            this.Token = Guid.NewGuid().ToString();
-        }
-    }
+    public string Token { get; } = Guid.NewGuid().ToString();
+    public string CorrelationId { get; init; } = "";
+    public string CallerNumber { get; init; } = "";
+    public string CalleeNumber { get; init; } = "";
+    public int MaxDurationSeconds { get; init; }
+    public bool HasResponded { get; set; }
 }

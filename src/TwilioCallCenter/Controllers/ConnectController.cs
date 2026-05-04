@@ -1,64 +1,48 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using Twilio.TwiML;
+using TwilioCallCenter.Configuration;
 using TwilioCallCenter.Data;
 using TwilioCallCenter.Filters;
 using TwilioCallCenter.Service;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using Twilio.AspNet.Common;
-using Twilio.AspNet.Core;
-using Twilio.TwiML;
 
-namespace TwilioCallCenter.Controllers
+namespace TwilioCallCenter.Controllers;
+
+[ApiController]
+[Route("api/connect")]
+[ValidateTwilioRequest]
+public class ConnectController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ConnectController : ControllerBase
-    {
-        private readonly IMemoryCache memoryCache;
-        public ConnectController(IMemoryCache memoryCache)
-        {
-            this.memoryCache = memoryCache;
-        }
-        [HttpPost]
-        public IActionResult Index()
-        {
-            var parameters = ToDictionary(this.Request.Form);
-            var response = new VoiceResponse();
-            string CallSid = "";
-            parameters.TryGetValue("CallSid", out CallSid);
-            if (!String.IsNullOrWhiteSpace(CallSid))
-            {
-                Call call = null;
-                memoryCache.TryGetValue(CallSid, out call);
-                if (call != null)
-                {
+    private readonly IMemoryCache _cache;
+    private readonly CallCenterOptions _options;
+    private readonly IStatusWebhookClient _webhook;
 
-                    response.Say("Giupiter.com la sta mettendo in contatto.", voice: "alice", language: "it-IT");
-                    response.Dial(call.UserNumber, timeLimit: call.TimeLimit);
-                    response.Hangup();
-                    HttpTools.UpdateCall(call, "dtm");
-                }
-                else
-                {
-                    response.Say("Mi spiace c'è stato un errore!", voice: "alice", language: "it-IT");
-                    response.Hangup();
-                }
-            } else
-            {
-                response.Say("Mi spiace c'è stato un errore cache!", voice: "alice", language: "it-IT");
-                response.Hangup();
-            }
-            return Content(response.ToString(), "application/xml");
-        }
-        private static IDictionary<string, string> ToDictionary(IFormCollection collection)
+    public ConnectController(IMemoryCache cache, IOptions<CallCenterOptions> options, IStatusWebhookClient webhook)
+    {
+        _cache = cache;
+        _options = options.Value;
+        _webhook = webhook;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    {
+        var sid = Request.Form["CallSid"].ToString();
+        var twiml = new VoiceResponse();
+
+        if (string.IsNullOrWhiteSpace(sid) || !_cache.TryGetValue<Call>(sid, out var call) || call is null)
         {
-            return collection.Keys
-                .Select(key => new { Key = key, Value = collection[key] })
-                .ToDictionary(p => p.Key, p => p.Value.ToString());
+            twiml.Say(_options.ErrorText, voice: _options.Voice, language: _options.Language);
+            twiml.Hangup();
+            return Content(twiml.ToString(), "application/xml");
         }
+
+        twiml.Say(_options.ConnectingText, voice: _options.Voice, language: _options.Language);
+        twiml.Dial(call.CallerNumber, timeLimit: call.MaxDurationSeconds);
+        twiml.Hangup();
+
+        await _webhook.UpdateAsync(call, "dtm", cancellationToken: cancellationToken);
+        return Content(twiml.ToString(), "application/xml");
     }
 }

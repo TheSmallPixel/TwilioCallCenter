@@ -1,73 +1,44 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using TwilioCallCenter.Data;
 using TwilioCallCenter.Filters;
 using TwilioCallCenter.Service;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using Twilio.AspNet.Common;
-using Twilio.AspNet.Core;
-using Twilio.TwiML;
-using Twilio.TwiML.Voice;
-namespace TwilioCallCenter.Controllers
+
+namespace TwilioCallCenter.Controllers;
+
+[ApiController]
+[Route("api/event")]
+[ValidateTwilioRequest]
+public class EventController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EventController : Controller
+    private readonly IMemoryCache _cache;
+    private readonly IStatusWebhookClient _webhook;
+
+    public EventController(IMemoryCache cache, IStatusWebhookClient webhook)
     {
-        private readonly IMemoryCache memoryCache;
-        public EventController(IMemoryCache memoryCache)
-        {
-            this.memoryCache = memoryCache;
-        }
-        [HttpPost]
-        public IActionResult Index()
-        {
-            var parameters = ToDictionary(this.Request.Form);
-            string CallSid = "";
-            string Status = "";
-            parameters.TryGetValue("CallSid", out CallSid);
-            parameters.TryGetValue("CallStatus", out Status);
-            if (!String.IsNullOrWhiteSpace(CallSid))
-            {
-                Call call = null;
-                memoryCache.TryGetValue(CallSid, out call);
-                // bool isExist = memoryCache.TryGetValue(AccountSid, out call);
-                if (call != null)
-                {
-                    if (Status == "completed")
-                    {
-                        string duration = "";
-                        parameters.TryGetValue("CallDuration", out duration);
-                        HttpTools.CloseCall(call, Status, duration);
-                    }
-                    else
-                    {
-                        HttpTools.UpdateCall(call, Status);
-                    }
-                }
-                else
-                {
-                    //errore tempo scaduto
-                    return BadRequest("Time Limit");
-                }
-            }
-            else
-            {
-                //errore chiave non mandata
-                return BadRequest("Call sid not found");
-            }
-            return Ok();
-        }
-        private static IDictionary<string, string> ToDictionary(IFormCollection collection)
-        {
-            return collection.Keys
-                .Select(key => new { Key = key, Value = collection[key] })
-                .ToDictionary(p => p.Key, p => p.Value.ToString());
-        }
+        _cache = cache;
+        _webhook = webhook;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    {
+        var sid = Request.Form["CallSid"].ToString();
+        var status = Request.Form["CallStatus"].ToString();
+
+        if (string.IsNullOrWhiteSpace(sid)) return BadRequest("CallSid missing");
+        if (!_cache.TryGetValue<Call>(sid, out var call) || call is null) return NotFound("Call expired or unknown");
+
+        if (status == "completed")
+        {
+            var duration = Request.Form["CallDuration"].ToString();
+            await _webhook.UpdateAsync(call, status, duration, cancellationToken);
+        }
+        else
+        {
+            await _webhook.UpdateAsync(call, status, cancellationToken: cancellationToken);
+        }
+
+        return Ok();
+    }
 }
